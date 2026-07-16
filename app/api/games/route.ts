@@ -18,6 +18,7 @@ export async function GET() {
         difficultyRating: game.difficultyRating,
         difficultyByGrade: game.difficultyByGrade,
         questionPool: game.questionPool,
+        ...(game.gameId === 'memory' ? { cardPool: game.questionPool } : {})
       };
     });
 

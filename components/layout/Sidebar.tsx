@@ -82,6 +82,10 @@ export default function Sidebar() {
       if (item.name === "Nilai Murid") return hasPermission("grades", "read");
       if (item.name === "Config Hadiah")
         return hasPermission("rewards", "read");
+      if (item.name === "Cerita Rakyat")
+        return hasPermission("folktales", "read");
+      if (item.name === "Katalog Stiker")
+        return hasPermission("stickers", "read");
       if (item.name === "Dokumentasi API")
         return user?.role?.name === "Super Admin";
 

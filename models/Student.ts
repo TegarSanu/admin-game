@@ -15,6 +15,8 @@ export interface IStudent extends Document {
   gameProgress: Record<string, { starsEarned: number; completedCount: number; highScore: number }>;
   parentEmail: string;
   parentId: mongoose.Types.ObjectId | string;
+  pointsPerCorrect?: number;
+  maxRupiahLimit?: number;
 }
 
 const StudentSchema: Schema = new Schema({
@@ -31,7 +33,9 @@ const StudentSchema: Schema = new Schema({
   unlockedStickers: { type: [String], default: [] },
   gameProgress: { type: Schema.Types.Mixed, default: {} },
   parentEmail: { type: String, required: true, trim: true, lowercase: true },
-  parentId: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+  parentId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  pointsPerCorrect: { type: Number },
+  maxRupiahLimit: { type: Number }
 }, { 
   timestamps: true,
   toJSON: { virtuals: true },

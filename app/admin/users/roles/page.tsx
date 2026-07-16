@@ -11,6 +11,8 @@ const modules = [
   { id: 'games', name: 'Game Management', description: 'Manage game config, limits, and question pools' },
   { id: 'grades', name: 'Nilai Murid', description: 'View student scores, stars, and approve pocket money claims' },
   { id: 'rewards', name: 'Config Hadiah', description: 'Set rupiah rate per correct answer and daily limits' },
+  { id: 'folktales', name: 'Cerita Rakyat', description: 'Manage children folk tales and storybooks' },
+  { id: 'stickers', name: 'Toko Stiker', description: 'Manage stickers that children can unlock with stars' },
   { id: 'game_app', name: 'Aplikasi Game', description: 'Permit entry to the simulated game interface' },
 ];
 

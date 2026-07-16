@@ -22,42 +22,51 @@ export async function GET() {
     let roles = await Role.find({}).sort({ isSystem: -1, name: 1 });
     
     if (roles.length === 0) {
-      // Seed default roles
+      // Seed default roles matching Dunia Pintar admin features
       const defaultRoles = [
         {
-          name: 'Administrator',
-          description: 'Full system access with all permissions enabled.',
+          name: 'Super Admin',
+          description: 'Akses penuh ke semua modul dan konfigurasi sistem.',
           isSystem: true,
           permissions: {
             users: ['read', 'write', 'delete'],
-            crm: ['read', 'write', 'delete'],
-            analytics: ['read', 'write', 'delete'],
-            media: ['read', 'write', 'delete'],
-            settings: ['read', 'write', 'delete'],
+            games: ['read', 'write', 'delete'],
+            grades: ['read', 'write', 'delete'],
+            rewards: ['read', 'write', 'delete'],
+            folktales: ['read', 'write', 'delete'],
+            stickers: ['read', 'write', 'delete'],
+            game_app: ['read', 'write', 'delete'],
           }
         },
         {
-          name: 'Editor',
-          description: 'Can manage data but cannot access system settings.',
-          isSystem: true,
+          name: 'Guru',
+          description: 'Manajemen soal, nilai murid, cerita rakyat, stiker, dan config hadiah.',
+          isSystem: false,
           permissions: {
-            users: ['read', 'write'],
-            crm: ['read', 'write'],
-            analytics: ['read'],
-            media: ['read', 'write'],
-            settings: ['read'],
+            games: ['read', 'write', 'delete'],
+            grades: ['read', 'write'],
+            rewards: ['read', 'write'],
+            folktales: ['read', 'write', 'delete'],
+            stickers: ['read', 'write', 'delete'],
+            game_app: ['read'],
           }
         },
         {
-          name: 'Viewer',
-          description: 'Read-only access across the entire platform.',
-          isSystem: true,
+          name: 'Orang Tua',
+          description: 'Akses aplikasi game dan pencairan tabungan anak.',
+          isSystem: false,
           permissions: {
-            users: ['read'],
-            crm: ['read'],
-            analytics: ['read'],
-            media: ['read'],
-            settings: ['read'],
+            games: ['read'],
+            grades: ['read', 'write'],
+            game_app: ['read'],
+          }
+        },
+        {
+          name: 'Murid',
+          description: 'Hanya memiliki akses untuk memainkan aplikasi game.',
+          isSystem: false,
+          permissions: {
+            game_app: ['read'],
           }
         }
       ];

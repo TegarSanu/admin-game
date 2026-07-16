@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import User from '@/models/User';
 import { Role } from '@/models/Role';
-import Game from '@/models/Game';
 import { Student } from '@/models/Student';
 import { RewardConfig } from '@/models/RewardConfig';
 import bcrypt from 'bcryptjs';
@@ -29,24 +28,31 @@ export async function GET() {
           games: ['read', 'write', 'delete'],
           grades: ['read', 'write', 'delete'],
           rewards: ['read', 'write', 'delete'],
+          folktales: ['read', 'write', 'delete'],
+          stickers: ['read', 'write', 'delete'],
+          game_app: ['read', 'write', 'delete'],
         },
         isSystem: true
       },
       {
         name: 'Guru',
-        description: 'Manajemen soal, nilai murid, manajemen game, dan config hadiah.',
+        description: 'Manajemen soal, nilai murid, cerita rakyat, stiker, dan config hadiah.',
         permissions: {
           games: ['read', 'write', 'delete'],
           grades: ['read', 'write'],
           rewards: ['read', 'write'],
+          folktales: ['read', 'write', 'delete'],
+          stickers: ['read', 'write', 'delete'],
+          game_app: ['read'],
         },
         isSystem: false
       },
       {
         name: 'Orang Tua',
-        description: 'Akses aplikasi game dan manajemen soal admin.',
+        description: 'Akses aplikasi game dan pencairan tabungan anak.',
         permissions: {
-          games: ['read', 'write'],
+          games: ['read'],
+          grades: ['read', 'write'],
           game_app: ['read'],
         },
         isSystem: false

@@ -7,12 +7,17 @@ export async function middleware(request: NextRequest) {
 
   const isAuthPage = request.nextUrl.pathname.startsWith('/login');
   
-  // Public paths that need no authentication
   if (
+    // Public paths that need no global middleware authentication.
+    // Note: /api/admin/students (GET/POST) is bypassed here because it performs 
+    // fine-grained internal authentication (verifying JWT cookies or X-App-API-Key 
+    // depending on the requested action like claim, reset, update, etc.).
     request.nextUrl.pathname.startsWith('/api/auth/login') ||
     request.nextUrl.pathname.startsWith('/api/auth/logout') ||
     request.nextUrl.pathname.startsWith('/api/marketplace') ||
-    request.nextUrl.pathname.startsWith('/marketplace')
+    request.nextUrl.pathname.startsWith('/marketplace') ||
+    (request.nextUrl.pathname === '/api/admin/rewards' && request.method === 'GET') ||
+    (request.nextUrl.pathname === '/api/admin/students' && (request.method === 'GET' || request.method === 'POST'))
   ) {
     return NextResponse.next();
   }

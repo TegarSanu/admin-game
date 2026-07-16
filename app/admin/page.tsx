@@ -323,52 +323,56 @@ export default function AdminDashboardPage() {
           )}
 
           {/* Cerita Rakyat */}
-          <Link href="/admin/folktales">
-            <motion.div
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="group glass-panel p-6 rounded-2xl border border-border/50 hover:border-pink-500/30 hover:bg-pink-500/[0.02] cursor-pointer transition-all duration-300 flex flex-col justify-between h-full min-h-[180px] space-y-4"
-            >
-              <div className="space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center group-hover:bg-pink-500 group-hover:text-white transition-all duration-300">
-                  <BookOpen className="w-5 h-5" />
+          {hasPermission("folktales", "read") && (
+            <Link href="/admin/folktales">
+              <motion.div
+                whileHover={{ y: -6, scale: 1.02 }}
+                className="group glass-panel p-6 rounded-2xl border border-border/50 hover:border-pink-500/30 hover:bg-pink-500/[0.02] cursor-pointer transition-all duration-300 flex flex-col justify-between h-full min-h-[180px] space-y-4"
+              >
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-xl bg-pink-500/10 text-pink-500 flex items-center justify-center group-hover:bg-pink-500 group-hover:text-white transition-all duration-300">
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-base font-bold text-foreground group-hover:text-pink-500 transition-colors">Cerita Rakyat</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Kelola daftar buku cerita rakyat interaktif, deskripsi, wilayah asal, serta konten ilustrasi per halaman.
+                  </p>
                 </div>
-                <h3 className="text-base font-bold text-foreground group-hover:text-pink-500 transition-colors">Cerita Rakyat</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Kelola daftar buku cerita rakyat interaktif, deskripsi, wilayah asal, serta konten ilustrasi per halaman.
-                </p>
-              </div>
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-[10px] font-black uppercase tracking-wider bg-pink-500/15 text-pink-600 dark:text-pink-400 px-2 py-0.5 rounded-full">
-                  Folk Tales
-                </span>
-                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-pink-500 group-hover:translate-x-1 transition-all" />
-              </div>
-            </motion.div>
-          </Link>
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-pink-500/15 text-pink-600 dark:text-pink-400 px-2 py-0.5 rounded-full">
+                    Folk Tales
+                  </span>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-pink-500 group-hover:translate-x-1 transition-all" />
+                </div>
+              </motion.div>
+            </Link>
+          )}
 
           {/* Katalog Stiker */}
-          <Link href="/admin/stickers">
-            <motion.div
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="group glass-panel p-6 rounded-2xl border border-border/50 hover:border-rose-500/30 hover:bg-rose-500/[0.02] cursor-pointer transition-all duration-300 flex flex-col justify-between h-full min-h-[180px] space-y-4"
-            >
-              <div className="space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center group-hover:bg-rose-500 group-hover:text-white transition-all duration-300">
-                  <StickerIcon className="w-5 h-5" />
+          {hasPermission("stickers", "read") && (
+            <Link href="/admin/stickers">
+              <motion.div
+                whileHover={{ y: -6, scale: 1.02 }}
+                className="group glass-panel p-6 rounded-2xl border border-border/50 hover:border-rose-500/30 hover:bg-rose-500/[0.02] cursor-pointer transition-all duration-300 flex flex-col justify-between h-full min-h-[180px] space-y-4"
+              >
+                <div className="space-y-3">
+                  <div className="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center group-hover:bg-rose-500 group-hover:text-white transition-all duration-300">
+                    <StickerIcon className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-base font-bold text-foreground group-hover:text-rose-500 transition-colors">Katalog Stiker</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Konfigurasi toko stiker reward anak, atur emoji stiker, harga bintang, nama stiker, dan warna kartu stiker.
+                  </p>
                 </div>
-                <h3 className="text-base font-bold text-foreground group-hover:text-rose-500 transition-colors">Katalog Stiker</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  Konfigurasi toko stiker reward anak, atur emoji stiker, harga bintang, nama stiker, dan warna kartu stiker.
-                </p>
-              </div>
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-[10px] font-black uppercase tracking-wider bg-rose-500/15 text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded-full">
-                  Sticker Catalog
-                </span>
-                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-rose-500 group-hover:translate-x-1 transition-all" />
-              </div>
-            </motion.div>
-          </Link>
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-rose-500/15 text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded-full">
+                    Sticker Catalog
+                  </span>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-rose-500 group-hover:translate-x-1 transition-all" />
+                </div>
+              </motion.div>
+            </Link>
+          )}
 
 
         </div>

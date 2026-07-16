@@ -1,0 +1,277 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --font-sans: var(--font-plus-jakarta), Arial, Helvetica, sans-serif;
+  
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+}
+
+:root {
+  /* ELEGANT COLORFUL LIGHT THEME */
+  --background: #f8fafc; /* Slate 50 */
+  --foreground: #0f172a; /* Slate 900 */
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --border: #e2e8f0; /* Slate 200 */
+  --muted: #f1f5f9; /* Slate 100 */
+  --muted-foreground: #64748b; /* Slate 500 */
+
+  /* DEFAULT ACCENT (Indigo) — always present as fallback */
+  --accent: #6366f1;
+  --accent-foreground: #ffffff;
+  --accent-hover: #4f46e5;
+  --accent-soft: rgba(99, 102, 241, 0.10);
+  --accent-soft-hover: rgba(99, 102, 241, 0.18);
+  --accent-glow: rgba(99, 102, 241, 0.25);
+}
+
+.dark {
+  /* ELEGANT COLORFUL DARK THEME */
+  --background: #020617; /* Slate 950 */
+  --foreground: #f8fafc; /* Slate 50 */
+  --card: #0f172a; /* Slate 900 */
+  --card-foreground: #f8fafc;
+  --border: #1e293b; /* Slate 800 */
+  --muted: #1e293b; /* Slate 800 */
+  --muted-foreground: #94a3b8; /* Slate 400 */
+
+  /* DEFAULT ACCENT (Indigo) — always present as fallback */
+  --accent: #818cf8;
+  --accent-foreground: #020617;
+  --accent-hover: #6366f1;
+  --accent-soft: rgba(129, 140, 248, 0.12);
+  --accent-soft-hover: rgba(129, 140, 248, 0.22);
+  --accent-glow: rgba(129, 140, 248, 0.30);
+}
+
+/* ────────────────────────────────────────────────────── 
+   ACCENT COLOR THEMES
+   Applied on <html> alongside .dark, so we use 
+   compound selectors: .theme-X and .dark.theme-X
+   ────────────────────────────────────────────────────── */
+
+/* INDIGO */
+.theme-indigo,
+:root.theme-indigo {
+  --accent: #6366f1;
+  --accent-foreground: #ffffff;
+  --accent-hover: #4f46e5;
+  --accent-soft: rgba(99, 102, 241, 0.10);
+  --accent-soft-hover: rgba(99, 102, 241, 0.18);
+  --accent-glow: rgba(99, 102, 241, 0.25);
+}
+.dark.theme-indigo {
+  --accent: #818cf8;
+  --accent-foreground: #020617;
+  --accent-hover: #6366f1;
+  --accent-soft: rgba(129, 140, 248, 0.12);
+  --accent-soft-hover: rgba(129, 140, 248, 0.22);
+  --accent-glow: rgba(129, 140, 248, 0.30);
+}
+
+/* ROSE */
+.theme-rose,
+:root.theme-rose {
+  --accent: #f43f5e;
+  --accent-foreground: #ffffff;
+  --accent-hover: #e11d48;
+  --accent-soft: rgba(244, 63, 94, 0.10);
+  --accent-soft-hover: rgba(244, 63, 94, 0.18);
+  --accent-glow: rgba(244, 63, 94, 0.25);
+}
+.dark.theme-rose {
+  --accent: #fb7185;
+  --accent-foreground: #020617;
+  --accent-hover: #f43f5e;
+  --accent-soft: rgba(251, 113, 133, 0.12);
+  --accent-soft-hover: rgba(251, 113, 133, 0.22);
+  --accent-glow: rgba(251, 113, 133, 0.30);
+}
+
+/* EMERALD */
+.theme-emerald,
+:root.theme-emerald {
+  --accent: #10b981;
+  --accent-foreground: #ffffff;
+  --accent-hover: #059669;
+  --accent-soft: rgba(16, 185, 129, 0.10);
+  --accent-soft-hover: rgba(16, 185, 129, 0.18);
+  --accent-glow: rgba(16, 185, 129, 0.25);
+}
+.dark.theme-emerald {
+  --accent: #34d399;
+  --accent-foreground: #020617;
+  --accent-hover: #10b981;
+  --accent-soft: rgba(52, 211, 153, 0.12);
+  --accent-soft-hover: rgba(52, 211, 153, 0.22);
+  --accent-glow: rgba(52, 211, 153, 0.30);
+}
+
+/* AMBER */
+.theme-amber,
+:root.theme-amber {
+  --accent: #f59e0b;
+  --accent-foreground: #ffffff;
+  --accent-hover: #d97706;
+  --accent-soft: rgba(245, 158, 11, 0.10);
+  --accent-soft-hover: rgba(245, 158, 11, 0.18);
+  --accent-glow: rgba(245, 158, 11, 0.25);
+}
+.dark.theme-amber {
+  --accent: #fbbf24;
+  --accent-foreground: #020617;
+  --accent-hover: #f59e0b;
+  --accent-soft: rgba(251, 191, 36, 0.12);
+  --accent-soft-hover: rgba(251, 191, 36, 0.22);
+  --accent-glow: rgba(251, 191, 36, 0.30);
+}
+
+/* ────────────────────────────────────────────────────── 
+   BASE STYLES
+   ────────────────────────────────────────────────────── */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global Transition Utility */
+.smooth-transition {
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  border-color: var(--border);
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Minimalist Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--muted-foreground);
+}
+
+/* Premium Glassmorphism */
+.glass-panel {
+  background-color: color-mix(in srgb, var(--card) 85%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05), inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+}
+
+.dark .glass-panel {
+  background-color: color-mix(in srgb, var(--card) 60%, transparent);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 10px 15px -3px rgb(0 0 0 / 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Sophisticated gradients for text and icons */
+.text-gradient {
+  background: linear-gradient(135deg, var(--accent) 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ────────────────────────────────────────────────────── 
+   ACCENT-AWARE UI UTILITIES
+   These use the dynamic --accent variable so they auto-update
+   when the user switches themes.
+   ────────────────────────────────────────────────────── */
+
+/* Active sidebar pill */
+.sidebar-active-pill {
+  background-color: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+}
+
+/* Accent-colored icon containers */
+.accent-icon-box {
+  background-color: var(--accent-soft);
+  color: var(--accent);
+}
+.accent-icon-box-solid {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Accent button */
+.btn-accent {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+  transition: all 0.3s ease;
+}
+.btn-accent:hover {
+  background-color: var(--accent-hover);
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+/* Accent badge */
+.accent-badge {
+  background-color: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Accent notification dot */
+.accent-dot {
+  background-color: var(--accent);
+}
+
+/* Accent border highlight */
+.accent-border-left {
+  border-left: 3px solid var(--accent);
+}
+
+/* Accent text */
+.text-accent-dynamic {
+  color: var(--accent);
+}
+
+/* Accent stat card hover glow */
+.stat-card-hover:hover {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px var(--accent-soft), 0 8px 25px var(--accent-glow);
+}
+
+/* Hide scrollbar for horizontal scroll containers */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

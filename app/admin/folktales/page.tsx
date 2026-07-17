@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowLeft, Save, Plus, Trash2, Edit2, Check, X, RefreshCw, BookOpen, PlusCircle } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, X, BookOpen, RefreshCw, PlusCircle } from "lucide-react";
 import { toast } from "sonner";
 
 interface FolkTalePageItem {
@@ -25,7 +26,6 @@ interface FolkTale {
 export default function FolkTalesPage() {
   const [folktales, setFolktales] = useState<FolkTale[]>([]);
   const [loading, setLoading] = useState(true);
-  const [seeding, setSeeding] = useState(false);
   const [saving, setSaving] = useState(false);
   
   // Selected folk tale for modal editor
@@ -62,23 +62,7 @@ export default function FolkTalesPage() {
     fetchFolktales();
   }, []);
 
-  const handleSeed = async () => {
-    try {
-      setSeeding(true);
-      const res = await fetch("/api/admin/seed/folktales");
-      const data = await res.json();
-      if (data.success) {
-        toast.success(`Berhasil memuat ulang ${data.count} cerita rakyat dari game!`);
-        fetchFolktales();
-      } else {
-        toast.error("Gagal memuat ulang");
-      }
-    } catch (err) {
-      toast.error("Terjadi kesalahan koneksi");
-    } finally {
-      setSeeding(false);
-    }
-  };
+
 
   const openEdit = (tale: FolkTale) => {
     setSelectedTale(tale);
@@ -198,14 +182,6 @@ export default function FolkTalesPage() {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={handleSeed}
-            disabled={seeding}
-            className="flex items-center gap-2 px-4 py-2.5 bg-secondary text-secondary-foreground rounded-xl font-bold text-sm border border-border/50 hover:bg-secondary/80 transition-all"
-          >
-            <RefreshCw className={`w-4 h-4 ${seeding ? "animate-spin" : ""}`} />
-            <span>Seed dari Game</span>
-          </button>
-          <button
             onClick={openCreate}
             className="flex items-center gap-2 px-4 py-2.5 bg-accent-dynamic text-accent-dynamic-foreground rounded-xl font-bold text-sm hover:opacity-90 transition-all"
           >
@@ -225,7 +201,7 @@ export default function FolkTalesPage() {
             </div>
           ) : folktales.length === 0 ? (
             <div className="bg-card border border-border rounded-2xl p-6 text-center text-sm text-muted-foreground">
-              Belum ada data cerita. Silakan seed dari game.
+              Belum ada data cerita. Silakan klik Tambah Cerita Baru.
             </div>
           ) : (
             <div className="space-y-3">

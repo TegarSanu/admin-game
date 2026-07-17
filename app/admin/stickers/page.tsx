@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, Save, Plus, Trash2, Edit2, Check, X, RefreshCw, Sticker as StickerIcon } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Edit2, Check, X, Sticker as StickerIcon, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 interface Sticker {
@@ -17,7 +19,6 @@ interface Sticker {
 export default function StickersPage() {
   const [stickers, setStickers] = useState<Sticker[]>([]);
   const [loading, setLoading] = useState(true);
-  const [seeding, setSeeding] = useState(false);
   const [saving, setSaving] = useState(false);
   
   // State for creating new sticker
@@ -55,23 +56,7 @@ export default function StickersPage() {
     fetchStickers();
   }, []);
 
-  const handleSeed = async () => {
-    try {
-      setSeeding(true);
-      const res = await fetch("/api/admin/seed/stickers");
-      const data = await res.json();
-      if (data.success) {
-        toast.success(`Berhasil memuat ulang ${data.count} stiker default dari game!`);
-        fetchStickers();
-      } else {
-        toast.error(data.error || "Gagal memuat default");
-      }
-    } catch (err) {
-      toast.error("Terjadi kesalahan koneksi");
-    } finally {
-      setSeeding(false);
-    }
-  };
+
 
   const handleAddSticker = async () => {
     if (!newSticker.stickerId || !newSticker.name || !newSticker.emoji) {
@@ -165,14 +150,6 @@ export default function StickersPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={handleSeed}
-            disabled={seeding}
-            className="flex items-center gap-2 px-4 py-2.5 bg-secondary text-secondary-foreground rounded-xl font-bold text-sm border border-border/50 hover:bg-secondary/80 transition-all"
-          >
-            <RefreshCw className={`w-4 h-4 ${seeding ? "animate-spin" : ""}`} />
-            <span>Seed dari Game</span>
-          </button>
           <button
             onClick={() => setIsAdding(!isAdding)}
             className="flex items-center gap-2 px-4 py-2.5 bg-accent-dynamic text-accent-dynamic-foreground rounded-xl font-bold text-sm hover:opacity-90 transition-all"
@@ -269,7 +246,7 @@ export default function StickersPage() {
           </div>
           <h3 className="text-lg font-black text-foreground">Katalog Stiker Kosong</h3>
           <p className="text-muted-foreground text-sm">
-            Silakan jalankan tombol "Seed dari Game" untuk mengimpor stiker default dari game app.
+            Silakan klik tombol "Tambah Stiker" untuk menambahkan stiker baru.
           </p>
         </div>
       ) : (

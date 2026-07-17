@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, User, Building2, LayoutDashboard, Settings, Command, Sun, Moon } from "lucide-react";
+import { Search, User, Building2, LayoutDashboard, Settings, Command, Sun, Moon, Gamepad2, FolderOpen, ShoppingBag, BarChart3 } from "lucide-react";
 import { useCommandPalette } from "@/lib/store";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -19,10 +19,10 @@ export default function CommandPalette() {
   const { theme, setTheme } = useTheme();
 
   const defaultActions = [
-    { type: "Quick Action", title: "Go to Dashboard", url: "/admin/analytics", icon: LayoutDashboard },
-    { type: "Quick Action", title: "Manage CRM Deals", url: "/admin/crm/pipeline", icon: Building2 },
+    { type: "Quick Action", title: "Go to Dashboard", url: "/admin", icon: LayoutDashboard },
+    { type: "Quick Action", title: "Manage Games", url: "/admin/games", icon: Gamepad2 },
     { type: "Quick Action", title: "Toggle Theme Mode", url: "#theme", icon: theme === 'dark' ? Sun : Moon },
-    { type: "Quick Action", title: "System Settings", url: "/admin/settings", icon: Settings },
+    { type: "Quick Action", title: "User Management", url: "/admin/users", icon: User },
   ];
 
   // Initialize defaults on open
@@ -89,17 +89,35 @@ export default function CommandPalette() {
         if (res.ok) {
           const data = await res.json();
           const formatted = [
-            ...(data.leads || []).map((l: any) => ({
-              type: "Lead",
-              title: `${l.name} - $${l.value?.toLocaleString()}`,
-              url: `/admin/crm/customers`, // Simplification for routing
+            ...(data.games || []).map((g: any) => ({
+              type: "Game",
+              title: g.name,
+              url: `/admin/games`,
+              icon: Gamepad2
+            })),
+            ...(data.users || []).map((u: any) => ({
+              type: "User",
+              title: `${u.name} (${u.email})`,
+              url: `/admin/users`,
               icon: User
             })),
-            ...(data.companies || []).map((c: any) => ({
-              type: "Company",
-              title: c.name,
-              url: `/admin/crm/companies`,
-              icon: Building2
+            ...(data.folktales || []).map((f: any) => ({
+              type: "Cerita Rakyat",
+              title: `${f.title} ${f.region ? `(${f.region})` : ""}`,
+              url: `/admin/folktales`,
+              icon: FolderOpen
+            })),
+            ...(data.stickers || []).map((s: any) => ({
+              type: "Sticker",
+              title: `${s.emoji} ${s.name} - ${s.cost} pts`,
+              url: `/admin/stickers`,
+              icon: ShoppingBag
+            })),
+            ...(data.students || []).map((st: any) => ({
+              type: "Murid",
+              title: `${st.avatar || "🧒"} ${st.name} (Grade ${st.gradeId})`,
+              url: `/admin/grades`,
+              icon: BarChart3
             }))
           ];
           setResults(formatted.length > 0 ? formatted : []);
@@ -145,7 +163,7 @@ export default function CommandPalette() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleModalKeyDown}
-              placeholder="Search leads, companies, or type a command..."
+              placeholder="Cari game, user, cerita rakyat, stiker, murid..."
               className="flex-1 bg-transparent outline-none text-foreground text-lg placeholder:text-muted-foreground/70"
             />
             <div className="flex items-center gap-1 shrink-0 bg-muted px-2 py-1 rounded text-[10px] font-black text-muted-foreground tracking-widest uppercase border border-border">

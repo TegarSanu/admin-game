@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import Game from '@/models/Game';
@@ -62,6 +63,7 @@ export async function GET() {
           icon: 1,
           difficultyRating: 1,
           isActive: 1,
+          difficultyByGrade: 1,
           createdAt: 1,
           updatedAt: 1,
           questionsCount: { $size: "$questionPool" }

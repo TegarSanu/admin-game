@@ -67,9 +67,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    const secret = new TextEncoder().encode(
-      process.env.JWT_SECRET || 'fallback_secret_key_change_in_production'
-    );
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error('JWT_SECRET environment variable is missing!');
+    }
+    const secret = new TextEncoder().encode(jwtSecret);
 
     const roleData = user.role ? { name: user.role.name, permissions: user.role.permissions } : { name: 'User', permissions: {} };
 

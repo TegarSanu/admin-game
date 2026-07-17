@@ -301,16 +301,6 @@ export default function Sidebar() {
                   {user?.role?.name || "super_admin"}
                 </p>
               </div>
-              <button
-                className="p-2 hover:bg-muted rounded-xl text-muted-foreground transition-colors outline-none"
-                aria-label="Open settings"
-                onClick={async () => {
-                  await fetch("/api/auth/logout", { method: "POST" });
-                  window.location.href = "/login";
-                }}
-              >
-                <Settings className="w-4 h-4" />
-              </button>
             </div>
           </div>
         </div>

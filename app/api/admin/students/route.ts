@@ -4,14 +4,21 @@ import { Student } from '@/models/Student';
 import mongoose from 'mongoose';
 import { jwtVerify } from 'jose';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key_change_in_production';
-const APP_API_KEY = process.env.APP_API_KEY || 'belajar_seru_app_secret_key_2026';
+const JWT_SECRET = process.env.JWT_SECRET;
+const APP_API_KEY = process.env.APP_API_KEY;
+
+if (!JWT_SECRET) {
+  console.error("CRITICAL: JWT_SECRET environment variable is missing!");
+}
+if (!APP_API_KEY) {
+  console.error("CRITICAL: APP_API_KEY environment variable is missing!");
+}
 
 // Helper to verify request: returns true if authenticated via cookie OR valid app API key
 async function verifyRequest(req: NextRequest, requireFullUserSession = false) {
   // Check API Key first (only if full user session is NOT strictly required)
   const apiKey = req.headers.get('x-app-api-key');
-  if (apiKey === APP_API_KEY && !requireFullUserSession) {
+  if (APP_API_KEY && apiKey === APP_API_KEY && !requireFullUserSession) {
     return { success: true, authType: 'api_key' };
   }
 
@@ -237,6 +244,61 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true, student: existingStudent });
     }
 
+    if (action === 'reset_all_students') {
+      const authResult = await verifyRequest(req, true);
+      if (!authResult.success) {
+        return NextResponse.json({ success: false, error: authResult.error }, { status: 401 });
+      }
+
+      const user = authResult.user as any;
+      const isAdmin = user?.role?.name === 'Super Admin' || user?.role?.name === 'Administrator';
+      if (!isAdmin) {
+        return NextResponse.json({ success: false, error: "Forbidden: Hanya Admin yang dapat mereset data murid" }, { status: 403 });
+      }
+
+      await Student.updateMany({}, {
+        $set: {
+          stars: 0,
+          badges: [],
+          unclaimedRupiah: 0,
+          claimedRupiah: 0,
+          unlockedStickers: [],
+          gameProgress: {},
+        }
+      });
+
+      return NextResponse.json({ success: true, message: "Semua data perkembangan murid berhasil direset" });
+    }
+
+    if (action === 'reset_student') {
+      const authResult = await verifyRequest(req, true);
+      if (!authResult.success) {
+        return NextResponse.json({ success: false, error: authResult.error }, { status: 401 });
+      }
+
+      const user = authResult.user as any;
+      const isAdmin = user?.role?.name === 'Super Admin' || user?.role?.name === 'Administrator';
+      if (!isAdmin) {
+        return NextResponse.json({ success: false, error: "Forbidden: Hanya Admin yang dapat mereset data murid" }, { status: 403 });
+      }
+
+      const { studentId } = body;
+      const student = await Student.findById(studentId);
+      if (!student) {
+        return NextResponse.json({ success: false, error: "Student not found" }, { status: 404 });
+      }
+
+      student.stars = 0;
+      student.badges = [];
+      student.unclaimedRupiah = 0;
+      student.claimedRupiah = 0;
+      student.unlockedStickers = [];
+      student.gameProgress = {};
+      await student.save();
+
+      return NextResponse.json({ success: true, student });
+    }
+
     const { studentId } = body;
     const student = await Student.findById(studentId);
     if (!student) {
@@ -269,6 +331,22 @@ export async function POST(req: NextRequest) {
 
       await student.save();
       return NextResponse.json({ success: true, student });
+    }
+
+    if (action === 'delete_student') {
+      const authResult = await verifyRequest(req, true);
+      if (!authResult.success) {
+        return NextResponse.json({ success: false, error: authResult.error }, { status: 401 });
+      }
+
+      const user = authResult.user as any;
+      const isAdmin = user?.role?.name === 'Super Admin' || user?.role?.name === 'Administrator';
+      if (!isAdmin) {
+        return NextResponse.json({ success: false, error: "Forbidden: Hanya Admin yang dapat menghapus data murid" }, { status: 403 });
+      }
+
+      await Student.findByIdAndDelete(studentId);
+      return NextResponse.json({ success: true, message: `Murid "${student.name}" berhasil dihapus!` });
     }
 
     // 3. Handlers strictly requiring parent/teacher/admin session (claims & reset)

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { RefreshCw, CheckCircle, RotateCcw, Award, Star, Users, Search, Filter, X } from "lucide-react";
+import { RefreshCw, CheckCircle, RotateCcw, Award, Star, Users, Search, Filter, X, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthStore } from "@/lib/store";
 
@@ -71,6 +71,69 @@ export default function StudentGradesPage() {
       }
     } catch (err) {
       toast.error("Terjadi kesalahan koneksi");
+    }
+  };
+
+  const handleResetStudent = async (studentId: string, studentName: string) => {
+    if (confirm(`PERINGATAN: Apakah Anda yakin ingin mereset semua data perkembangan (bintang, lencana, tabungan, stiker, progres game) untuk murid "${studentName}"? Tindakan ini tidak dapat dibatalkan!`)) {
+      try {
+        const res = await fetch("/api/admin/students", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "reset_student", studentId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          toast.success(`Data perkembangan murid "${studentName}" berhasil direset!`);
+          fetchStudents();
+        } else {
+          toast.error(data.error || "Gagal mereset data murid");
+        }
+      } catch (err) {
+        toast.error("Terjadi kesalahan koneksi");
+      }
+    }
+  };
+
+  const handleDeleteStudent = async (studentId: string, studentName: string) => {
+    if (confirm(`PERINGATAN SANGAT PENTING: Apakah Anda yakin ingin MENGHAPUS murid "${studentName}" dari database? Semua data perkembangan dan tabungannya akan terhapus secara permanen. Tindakan ini tidak dapat dibatalkan!`)) {
+      try {
+        const res = await fetch("/api/admin/students", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "delete_student", studentId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          toast.success(`Murid "${studentName}" berhasil dihapus dari database!`);
+          fetchStudents();
+        } else {
+          toast.error(data.error || "Gagal menghapus murid");
+        }
+      } catch (err) {
+        toast.error("Terjadi kesalahan koneksi");
+      }
+    }
+  };
+
+  const handleResetAll = async () => {
+    if (confirm("PERINGATAN: Apakah Anda yakin ingin mereset perolehan bintang, lencana, tabungan, stiker, dan progress untuk SEMUA murid? Tindakan ini tidak dapat dibatalkan!")) {
+      try {
+        const res = await fetch("/api/admin/students", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "reset_all_students" })
+        });
+        const data = await res.json();
+        if (data.success) {
+          toast.success("Semua data murid berhasil direset!");
+          fetchStudents();
+        } else {
+          toast.error(data.error || "Gagal mereset data murid");
+        }
+      } catch (err) {
+        toast.error("Terjadi kesalahan koneksi");
+      }
     }
   };
 
@@ -258,28 +321,50 @@ export default function StudentGradesPage() {
         </div>
 
         {/* Action buttons */}
-        <div className="flex gap-3">
-          <button
-            onClick={() => handleAction(student._id, "claim")}
-            disabled={student.unclaimedRupiah === 0}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-emerald-500 text-white rounded-xl font-bold text-xs hover:bg-emerald-600 transition-all disabled:opacity-50"
-          >
-            <CheckCircle className="w-4 h-4" />
-            <span>Setujui Klaim</span>
-          </button>
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-3">
+            <button
+              onClick={() => handleAction(student._id, "claim")}
+              disabled={student.unclaimedRupiah === 0}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-emerald-500 text-white rounded-xl font-bold text-xs hover:bg-emerald-600 transition-all disabled:opacity-50"
+            >
+              <CheckCircle className="w-4 h-4" />
+              <span>Setujui Klaim</span>
+            </button>
 
-          <button
-            onClick={() => {
-              if (confirm(`Reset tabungan sebesar Rp ${student.claimedRupiah.toLocaleString("id-ID")}?`)) {
-                handleAction(student._id, "reset");
-              }
-            }}
-            disabled={student.claimedRupiah === 0}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-rose-500 text-white rounded-xl font-bold text-xs hover:bg-rose-600 transition-all disabled:opacity-50"
-          >
-            <RotateCcw className="w-4 h-4" />
-            <span>Reset Tabungan</span>
-          </button>
+            <button
+              onClick={() => {
+                if (confirm(`Reset tabungan sebesar Rp ${student.claimedRupiah.toLocaleString("id-ID")}?`)) {
+                  handleAction(student._id, "reset");
+                }
+              }}
+              disabled={student.claimedRupiah === 0}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-rose-500 text-white rounded-xl font-bold text-xs hover:bg-rose-600 transition-all disabled:opacity-50"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>Reset Tabungan</span>
+            </button>
+          </div>
+
+          {isSuperAdmin && (
+            <div className="flex gap-2 w-full">
+              <button
+                onClick={() => handleResetStudent(student._id, student.name)}
+                className="flex-1 flex items-center justify-center gap-1 py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-xl font-bold text-[11px] border border-amber-500/20 transition-all duration-200"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset Semua</span>
+              </button>
+              
+              <button
+                onClick={() => handleDeleteStudent(student._id, student.name)}
+                className="flex-1 flex items-center justify-center gap-1 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 rounded-xl font-bold text-[11px] border border-red-500/20 transition-all duration-200"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Hapus Murid</span>
+              </button>
+            </div>
+          )}
         </div>
       </motion.div>
     );
@@ -287,13 +372,24 @@ export default function StudentGradesPage() {
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-3xl font-black text-foreground tracking-tight uppercase">
-          Nilai & <span className="text-accent-dynamic">Tabungan Murid</span>
-        </h1>
-        <p className="text-muted-foreground text-sm font-medium mt-1">
-          Pantau perkembangan belajar murid, perolehan bintang, lencana, serta kelola pencairan tabungan mereka.
-        </p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-black text-foreground tracking-tight uppercase">
+            Nilai & <span className="text-accent-dynamic">Tabungan Murid</span>
+          </h1>
+          <p className="text-muted-foreground text-sm font-medium mt-1">
+            Pantau perkembangan belajar murid, perolehan bintang, lencana, serta kelola pencairan tabungan mereka.
+          </p>
+        </div>
+        {isSuperAdmin && (
+          <button
+            onClick={handleResetAll}
+            className="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-black uppercase tracking-wider shadow-lg shadow-red-500/10 hover:shadow-red-600/20 transition-all duration-200 shrink-0"
+          >
+            <RotateCcw className="w-4 h-4" />
+            Reset Semua Murid
+          </button>
+        )}
       </div>
 
       {/* Filter Bar */}

@@ -43,9 +43,11 @@ export async function middleware(request: NextRequest) {
 
   // If token exists, verify it
   try {
-    const secret = new TextEncoder().encode(
-      process.env.JWT_SECRET || 'fallback_secret_key_change_in_production'
-    );
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error('JWT_SECRET environment variable is missing!');
+    }
+    const secret = new TextEncoder().encode(jwtSecret);
     const { payload } = await jwtVerify(token, secret);
     
     const userRole = (payload.role as any)?.name;
